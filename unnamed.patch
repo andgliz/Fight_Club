@@ -1,0 +1,52 @@
+Index: app/src/main/java/com/example/fightclub/main.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/fightclub/main.kt b/app/src/main/java/com/example/fightclub/main.kt
+--- a/app/src/main/java/com/example/fightclub/main.kt
++++ b/app/src/main/java/com/example/fightclub/main.kt	(date 1758272428001)
+@@ -26,6 +26,8 @@
+             }
+             fightingRing.showCharacterCharacteristics(player, ConsoleIO)
+             fightingRing.showCharacterCharacteristics(monster, ConsoleIO)
++            
++            val rollDice
+             fightingRing.fight(player, monster, ConsoleIO)
+             if (monster.isAlive) {
+                 fightingRing.fight(monster, player, ConsoleIO)
+Index: app/src/main/java/com/example/fightclub/FightingRing.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/fightclub/FightingRing.kt b/app/src/main/java/com/example/fightclub/FightingRing.kt
+--- a/app/src/main/java/com/example/fightclub/FightingRing.kt
++++ b/app/src/main/java/com/example/fightclub/FightingRing.kt	(date 1758272235578)
+@@ -3,10 +3,9 @@
+ import com.example.fightclub.model.Creature
+ 
+ class FightingRing {
+-    fun fight(attacker: Creature, defender: Creature, ioProvider: IOProvider) {
++    fun fight(attacker: Creature, defender: Creature, rollDiceSucceeded: Boolean, ioProvider: IOProvider) {
+         ioProvider.write("${attacker.name} turn.")
+-        val attackModifier = attacker.attack - defender.defense + 1
+-        if (rollDice(attackModifier, ConsoleIO)) {
++        if (rollDiceSucceeded) {
+             val damage = attacker.possibleDamageRange.random()
+             ioProvider.write("You've done $damage damage\n")
+             defender.takeDamage(damage)
+@@ -14,8 +13,12 @@
+             ioProvider.write("The attempts are over. The attack failed\n")
+         }
+     }
++    
++    fun attackModifier(attack: Int, defense:Int) : Int {
++        val attackModifier = attack - defense + 1
++    }
+ 
+-    private fun rollDice(attackModifier: Int, ioProvider: IOProvider): Boolean {
++    fun rollDice(attackModifier: Int, ioProvider: IOProvider): Boolean {
+         var attempts = if (attackModifier > 0) attackModifier else 1
+         ioProvider.write("You roll $attempts dice.")
+         while (attempts != 0) {
